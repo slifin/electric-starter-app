@@ -7,5 +7,13 @@ body, html {
 .window-frame {
     height: 100%;
     box-sizing:border-box;
-    border:1px solid blue;
+}
+
+.node {
+    position: absolute;
+    background: white;
+    padding: 10px;
+    border-radius: 5px;
+    resize: both;
+    overflow: auto;
 }
