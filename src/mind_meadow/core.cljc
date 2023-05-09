@@ -8,39 +8,28 @@
 
 #?(:clj (defonce !nodes (atom {})))
 (e/def nodes (e/server (e/watch !nodes)))
-;#?(:cljs (defonce motion? (atom false)))
 
+#?(:cljs
+   (defn listen-for-resize [target-dom-elm]
+     (m/observe (fn mount [emit!]
+                  (emit! nil)
+                  (let [resize-observer (js/ResizeObserver.
+                                          (fn [[entry] _]
+                                            (emit! entry)))]
+                    (.observe resize-observer target-dom-elm)
+                    (fn unmount []
+                      (.disconnect resize-observer)))))))
 
-;(e/defn listen-for-resize
-;  [[entry] _]
-;  (let [{:keys [width]} (.-contentRect entry)]
-;    (e/server (swap! !nodes merge
-;                     (.-id (.-target entry))
-;                     {:width width}))))
-;
-;
-;(e/defn on-resize
-;  [target]
-;  (.observe (new js/ResizeObserver listen-for-resize) target))
-;
 
 (e/defn add-node
   [e]
   (let [node {:x (.-x e)
               :y (.-y e)
               :width (.-width (.-target e))
-              :height (.-height (.-target e))}]
-    (e/server (swap! !nodes assoc (random-uuid) node))))
+              :height (.-height (.-target e))}
+        id (random-uuid)]
+    (e/server (swap! !nodes assoc id node))))
 
-
-;(e/defn move-node
-;  [e]
-;  (when @motion?
-;    (let [node {:x (.-offsetX e)
-;                :y (.-offsetY e)}
-;          id (uuid (.-id (.-target e)))]
-;      (e/server (swap! !nodes merge {id node})))))
-;
 
 (e/defn Meadow
   []
@@ -51,12 +40,12 @@
           (dom/props {:class "node"
                       :contenteditable true
                       :id id
-                      :style {:top (px y) :left (px x)
-                              :height (px height) :width (px width)}})
-          ;(dom/on "mousemove" move-node)
-          ;(dom/on "mousedown" (e/fn [_] (reset! motion? true)))
-          ;(dom/on "mouseup" (e/fn [_] (reset! motion? false)))
-          (dom/text ""))))))
+                      :style {:top (str y "px") :left (px x)}})
+
+          (dom/text (str nodes))
+          (let [bk (new (listen-for-resize dom/node))]
+            (js/console.log bk)))))))
+            ;(e/server (swap! !nodes merge id {:width w :height h}))))))))
 
 
 (e/defn Window
