@@ -51,9 +51,7 @@
                       :contenteditable true
                       :id id
                       :style {:top (px y) :left (px x)
-                              :height (px height) :width (px width)}})
-          (dom/text nodes))))))
-
+                              :height (px height) :width (px width)}}))))))
 
 
 (e/defn Window
@@ -64,6 +62,8 @@
         (dom/props {:class "window-frame"})
         (dom/on "dblclick" add-node)
         (Meadow.)
-        (ui/button delete-nodes (dom/text "Delete")))
+        (dom/div
+          (dom/div (dom/text (str nodes)))
+          (ui/button delete-nodes (dom/text "Delete"))))
       (catch Pending _
         (dom/style {:cursor "progress"})))))
