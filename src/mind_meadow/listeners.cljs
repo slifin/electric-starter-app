@@ -2,11 +2,14 @@
   (:require [missionary.core :as m]))
 
 
-(defn listen-for-resize [target-dom-elm]
+(defn on-resize [target-dom-elm]
   (->>
     (m/observe (fn mount [emit!]
                  (emit! nil)
-                 (let [resize-observer (js/ResizeObserver. (fn [entries _] (emit! entries)))]
+                 (let [resize-observer (js/ResizeObserver.
+                                         (fn [entries _]
+                                           (for [entry entries]
+                                             (emit! entry))))]
                    (.observe resize-observer target-dom-elm)
                    (fn unmount []
                      (.disconnect resize-observer)))))

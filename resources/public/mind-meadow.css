@@ -24,6 +24,10 @@ body, html {
     display: none;
     box-sizing: content-box;
     border-radius: 5px;
-    resize: both;
-    overflow: auto;
+    /*resize: both;*/
+    /*overflow: auto;*/
+}
+
+.node:hover {
+    cursor: move;
 }
