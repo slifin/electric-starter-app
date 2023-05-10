@@ -2,6 +2,7 @@
   (:import [hyperfiddle.electric Pending])
   (:require [hyperfiddle.electric :as e]
             [hyperfiddle.electric-dom2 :as dom]
+            [hyperfiddle.electric-ui4 :as ui]
             [missionary.core :as m]
             [mind-meadow.units :refer [px]]))
 
@@ -20,10 +21,15 @@
 
 
 (e/defn add-node
-  [e]
-  (let [node {:x (.-x e)
-              :y (.-y e)}]
+  [ev]
+  (let [node {:x (.-x ev)
+              :y (.-y ev)}]
     (e/server (swap! !nodes assoc (str (random-uuid)) node))))
+
+
+(e/defn delete-nodes
+  []
+  (e/server (reset! !nodes {})))
 
 
 (e/defn Meadow
@@ -49,6 +55,7 @@
           (dom/text nodes))))))
 
 
+
 (e/defn Window
   []
   (e/client
@@ -56,6 +63,7 @@
       (dom/div
         (dom/props {:class "window-frame"})
         (dom/on "dblclick" add-node)
-        (Meadow.))
+        (Meadow.)
+        (ui/button delete-nodes (dom/text "Delete")))
       (catch Pending _
         (dom/style {:cursor "progress"})))))
