@@ -14,7 +14,9 @@ body, html {
 .debug-bar {
     position: fixed;
     bottom: 0;
+    width: 100%;
     background: white;
+    font-family: monospace;
 }
 
 .node {
@@ -24,6 +26,8 @@ body, html {
     display: none;
     box-sizing: content-box;
     border-radius: 5px;
+    min-width: 5rem;
+    min-height: 1.2rem;
     /*resize: both;*/
     /*overflow: auto;*/
 }
