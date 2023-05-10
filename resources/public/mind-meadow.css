@@ -21,6 +21,7 @@ body, html {
     position: absolute;
     background: white;
     padding: 10px;
+    display: none;
     box-sizing: content-box;
     border-radius: 5px;
     resize: both;

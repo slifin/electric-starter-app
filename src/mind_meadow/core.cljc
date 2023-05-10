@@ -27,20 +27,19 @@
           (dom/props {:class "node"
                       :contenteditable true
                       :id id
-                      :style {:top (px y)
-                              :left (px x)
+                      :style {:display (when id "block")
                               :height (px height)
+                              :left (px x)
+                              :top (px y)
                               :width (px width)}})
           (let [resized (new (listen-for-resize dom/node))]
             (e/for [target resized]
               (let [node {:height (.-height (.-contentRect target))
                           :width (.-width (.-contentRect target))}]
-                (if (not= "" (.-id (.-target target)))
+                (when (not= "" (.-id (.-target target)))
                  (e/server
-                   (swap! !nodes (fn [m] (update-in m [id] merge node))))
-                 (do
-                   (js/console.log (.-target target))
-                   (js/console.log target)))))))))))
+                   (swap! !nodes (fn [m] (update-in m [id] merge node)))))))))))))
+
 
 (e/defn Debug-bar
   []
