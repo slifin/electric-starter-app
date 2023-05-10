@@ -7,7 +7,7 @@
     (m/observe (fn mount [emit!]
                  (emit! nil)
                  (let [resize-observer (js/ResizeObserver. (fn [entries _] (emit! entries)))]
-                   (.observe resize-observer target-dom-elm #js{"box" "border-box"})
+                   (.observe resize-observer target-dom-elm)
                    (fn unmount []
                      (.disconnect resize-observer)))))
     (m/relieve {})))

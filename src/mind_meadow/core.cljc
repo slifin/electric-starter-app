@@ -22,7 +22,6 @@
   []
   (e/server
     (e/for-by first [[id {:keys [x y height width]}] nodes]
-      (println id)
       (e/client
         (dom/div
           (dom/props {:class "node"
@@ -36,8 +35,9 @@
             (e/for [target resized]
               (let [node {:height (.-height (.-contentRect target))
                           :width (.-width (.-contentRect target))}]
-                (e/server
-                  (swap! !nodes (fn [m] (update-in m [id] merge node))))))))))))
+                (when (not= "" (.-id (.-target target)))
+                 (e/server
+                   (swap! !nodes (fn [m] (update-in m [id] merge node)))))))))))))
 
 (e/defn Debug-bar
   []
