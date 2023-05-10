@@ -18,43 +18,43 @@
     (e/server (swap! !nodes assoc (str (random-uuid)) node))))
 
 
-(e/defn delete-nodes
-  []
-  (e/server (reset! !nodes {})))
-
-
 (e/defn Meadow
   []
   (e/server
     (e/for-by first [[id {:keys [x y height width]}] nodes]
+      (println id)
       (e/client
         (dom/div
-          (let [resized (new (listen-for-resize dom/node))]
-            (e/for [target resized]
-              (let [id (.-id (.-target target))
-                    node {:height (.-height (.-contentRect target))
-                          :width (.-width (.-contentRect target))}]
-                (when (not= id "")
-                  (e/discard
-                    (e/server
-                      (swap! !nodes (fn [m] (update-in m [id] merge node)))))))))
           (dom/props {:class "node"
                       :contenteditable true
                       :id id
-                      :style {:top (px y) :left (px x)
-                              :height (px height) :width (px width)}}))))))
+                      :style {:top (px y)
+                              :left (px x)
+                              :height (px height)
+                              :width (px width)}})
+          (let [resized (new (listen-for-resize dom/node))]
+            (e/for [target resized]
+              (let [node {:height (.-height (.-contentRect target))
+                          :width (.-width (.-contentRect target))}]
+                (e/server
+                  (swap! !nodes (fn [m] (update-in m [id] merge node))))))))))))
+
+(e/defn Debug-bar
+  []
+  (e/client
+    (dom/div (dom/props {:class "debug-bar"})
+      (dom/div (dom/text (str nodes)))
+      (ui/button (e/fn [] (e/server (reset! !nodes {}))) (dom/text "Delete")))))
 
 
 (e/defn Window
   []
   (e/client
     (try
+      (Debug-bar.)
       (dom/div
         (dom/props {:class "window-frame"})
         (dom/on "dblclick" add-node)
-        (Meadow.)
-        (dom/div
-          (dom/div (dom/text (str nodes)))
-          (ui/button delete-nodes (dom/text "Delete"))))
+        (Meadow.))
       (catch Pending _
         (dom/style {:cursor "progress"})))))
