@@ -35,9 +35,12 @@
             (e/for [target resized]
               (let [node {:height (.-height (.-contentRect target))
                           :width (.-width (.-contentRect target))}]
-                (when (not= "" (.-id (.-target target)))
+                (if (not= "" (.-id (.-target target)))
                  (e/server
-                   (swap! !nodes (fn [m] (update-in m [id] merge node)))))))))))))
+                   (swap! !nodes (fn [m] (update-in m [id] merge node))))
+                 (do
+                   (js/console.log (.-target target))
+                   (js/console.log target)))))))))))
 
 (e/defn Debug-bar
   []
