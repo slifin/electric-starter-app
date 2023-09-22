@@ -1,4 +1,5 @@
-(ns user) ; Must be ".clj" file, Clojure doesn't auto-load user.cljc
+(ns user ; Must be ".clj" file, Clojure doesn't auto-load user.cljc
+  (:require [missionary.core :as m]))
 
 ; lazy load dev stuff - for faster REPL startup and cleaner dev classpath
 (def start-electric-server! (delay @(requiring-resolve 'app.electric-server-java8-jetty9/start-server!)))
@@ -26,3 +27,11 @@
   ; connect a second REPL instance to it
   ; (DO NOT REUSE JVM REPL it will fail weirdly)
   (type 1))
+
+
+(comment
+  ((m/sp (println "hi")
+         ;(throw (ex-info "lol" {}))
+         (println "hi2"))
+   #(println "continue printing" %)
+   #(println "error printing" %)))
